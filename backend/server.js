@@ -3,6 +3,8 @@ const express = require("express")
 const connectDB = require("./config/connectDB")
 const Task = require("./models/taskModel")
 
+const cors = require("cors")
+
 const taskRoutes = require("./routes/taskRoute")
 
 const app = express()
@@ -11,8 +13,10 @@ const app = express()
 app.use(express.json())
 //gives access to the formdata x-www-form-urlencoded from the body of the request
 app.use(express.urlencoded({extended: false}))
-app.use(taskRoutes)
 
+app.use(cors())
+
+app.use("/api/tasks", taskRoutes)
 
 /* const logger = (req, res, next) =>{
     console.log("Middleware ran")
