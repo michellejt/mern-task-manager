@@ -15,6 +15,10 @@ const TaskList = () => {
 
     const [isLoading, setIsLoading] = useState(false)
 
+    const [isEditing, setIsEditing] = useState(false)
+
+    const [taskID, setTaskID] = useState("")
+
     const [formData, setFormData] = useState({
         name: "",
         completed: false
@@ -58,6 +62,8 @@ const TaskList = () => {
             toast.success("Task added successfully")
             //after post we want to clear the form data 
             setFormData({...formData, name: ""})
+            //refresh to get tasks
+            getTasks()
         } catch (error) {
             toast.error(error.message)
         }
@@ -72,11 +78,37 @@ const deleteTask = async (id) => {
     }
 }
 
+const getSingleTask = async (task) => {
+    setFormData({ name: task.name, completed: false})
+    setTaskID(task._id)
+    setIsEditing(true)
+}
+
+const updateTask = async (e) => {
+    e.preventDefault()
+    if (name === "") {
+        return toast.error("input field cannot be empty")
+    }
+    try {
+        await axios.put(`${URL}/api/tasks/${taskID}`, formData)
+        setFormData({...formData, name: ""})
+        setIsEditing(false)
+        getTasks()
+    } catch(error) {
+        toast.error(error.message)
+    }
+}
 
   return (
     <div>
         <h2>Task Manager</h2>
-        <TaskForm name={name} handleInputChange={handleInputChange} createTask={createTask}/>
+        <TaskForm 
+        name={name} 
+        handleInputChange={handleInputChange} 
+        createTask={createTask}
+        isEditing={isEditing}
+        updateTask={updateTask}
+        />
     <div className="--flex-between --pb">
         <p>
             <b>Total Tasks:</b> 0
@@ -102,10 +134,12 @@ const deleteTask = async (id) => {
             <>
             {tasks.map((task, index) => {
                 return (
-                    <Task key={task._id} 
+                    <Task 
+                    key={task._id} 
                     task={task}
                     index={index}
                     deleteTask={deleteTask}
+                    getSingleTask={getSingleTask}
                     />
                 )
             })}
