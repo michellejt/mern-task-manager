@@ -7,6 +7,12 @@ const cors = require("cors")
 
 const taskRoutes = require("./routes/taskRoute")
 
+app.use(
+    cors({
+    origin: ["http://localhost:3000/", "https://mjt-mern-task-app.netlify.app/"],
+    })
+)
+
 const app = express()
 
 //middleware slotted inside our routes and has access to the request and response
@@ -14,11 +20,7 @@ app.use(express.json())
 //gives access to the formdata x-www-form-urlencoded from the body of the request
 app.use(express.urlencoded({extended: false}))
 
-app.use(
-    cors({
-    origin: ["http://localhost:3000/", "https://mjt-mern-task-app.netlify.app/"],
-    })
-)
+
 
 
 
