@@ -21,8 +21,6 @@ app.use(express.urlencoded({extended: false}))
  */
 app.use(cors());
 
-
-
 app.use("/api/tasks", taskRoutes)
 
 /* const logger = (req, res, next) =>{
